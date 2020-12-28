@@ -10,9 +10,11 @@ end
             PlayerGui = await(Player,"PlayerGui")
         }
         local OBJ = {
-        
+            
         }
-        
+        for i,v in pairs(script.modules:GetChildren()) do
+            table.insert(OBJ,require(v))
+        end
         OBJ.UI_LIST = {}
         
         return OBJ
