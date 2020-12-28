@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "src/_framework/": true,
+    ".vscode": true
+  },
+  "Lua.diagnostics.disable": [
+    "incorrect-call-arguments",
+    "redefined-local",
+    "redundant-parameter",
+    "undefined-global"
+  ]
+}

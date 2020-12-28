@@ -1,5 +1,4 @@
 return function()
-	
 	local ZonePlus = game:GetService("ReplicatedStorage"):WaitForChild("HDAdmin"):WaitForChild("Zone+")
 	local ZoneService = require(ZonePlus.ZoneService)
 	local group = workspace.Zone2
@@ -9,6 +8,6 @@ return function()
 	local isClientInZone = zone:getPlayer(localPlayer) -- Checks whether the local player is within the zone
 
 	zone.playerAdded:Connect(function() -- Fires when the localPlayer enters the zone
-		
+		 
 	end)
 end
