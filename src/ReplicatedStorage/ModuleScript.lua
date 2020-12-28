@@ -12,13 +12,11 @@ function GetDirectory(userdata)
 end
 function module:Wrap(userdata)
 	local Object = {}
-	local Properties = {}
-	for i,v in pairs(Properties) do
-		Object[i] = pcall return userdata[v] or v
-	end
-	return Object
+
+	return userdata
 end
 function module:GetIndexes()
 	return Indexes
 end
 return module
+-- hello

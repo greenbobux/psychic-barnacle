@@ -6,7 +6,6 @@
       "$className": "ReplicatedStorage",
       "$ignoreUnknownInstances": true,
       "$path": "src/ReplicatedStorage"
-      
     },
     "ServerStorage": {
       "$className": "ServerStorage",
