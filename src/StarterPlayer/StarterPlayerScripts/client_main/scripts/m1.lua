@@ -3,7 +3,7 @@ return function()
 	local function DOORTWEEN(value)
 		local door = workspace.Door.MainPart.PrimaryPart
 		local cfv = game.ReplicatedStorage:FindFirstChild("v"..value).Value
-		print(cfv)
+	
 		game:GetService("TweenService"):Create(door,TweenInfo.new(1,Enum.EasingStyle.Elastic),{CFrame = cfv})	:Play()
 	end
 	local ZonePlus = game:GetService("ReplicatedStorage"):WaitForChild("HDAdmin"):WaitForChild("Zone+")

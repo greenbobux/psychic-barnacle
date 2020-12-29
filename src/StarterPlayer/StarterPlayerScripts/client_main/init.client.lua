@@ -8,6 +8,9 @@ local Funcs = {
 for i,v in pairs(script.scripts:GetChildren()) do
 	if v:IsA("ModuleScript") then
 		local success, error = Funcs.ms(v)
-		warn(success and success, error and error)
+		--warn(success and success, error and error)
 	end
 end
+
+
+--local TestService = game:GetService("TestService")

@@ -13,7 +13,8 @@ end
             
         }
         for i,v in pairs(script.modules:GetChildren()) do
-            table.insert(OBJ,require(v))
+            OBJ[v.Name] = require(v)
+            print(v.Name)
         end
         OBJ.UI_LIST = {}
         

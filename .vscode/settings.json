@@ -7,6 +7,9 @@
     "incorrect-call-arguments",
     "redefined-local",
     "redundant-parameter",
-    "undefined-global"
+    "undefined-global",
+    "missing-module-return",
+    "unused-vararg",
+    "empty-block"
   ]
 }

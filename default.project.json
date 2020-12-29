@@ -5,7 +5,11 @@
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
       "$ignoreUnknownInstances": true,
-      "$path": "src/ReplicatedStorage"
+      "$path": "src/ReplicatedStorage",
+      "UI_effects": {
+        "$ignoreUnknownInstances": true,
+        "$className": "Folder"
+      }
     },
     "ServerStorage": {
       "$className": "ServerStorage",
