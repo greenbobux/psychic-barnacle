@@ -21,8 +21,7 @@ return function()
     })
     local Events = {}
     local Keybinds = {}
-    local function HandleAction(...)
-        local Action,UserInputState,InputObject = ...
+    local function HandleAction(Action,UserInputState,InputObject)
         local Event = Events[Action]
         if Event then Event(require(ReplicatedStorage.input)(InputObject)) end
     end
