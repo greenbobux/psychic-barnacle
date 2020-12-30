@@ -1,9 +1,22 @@
 return function ()
     local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")
     local ProfileService = game.ReplicatedStorage.Source.Server.Modules.ProfileService
+    function fill_table(literits)
+        assert(type(literits)=="number", "Argument #1 NaN")
+        local str = [[.]]
+        return str:rep(literits-1):split([[.]])
+    end
+
     local ProfileTemplate = {
         Burritos = 10;
-        Inventory = {};
+		Inventory = {
+			Hotbar = {
+             fill_table(7)
+			};
+			Inventory = {
+                fill_table(21)
+            };
+		};
     }
 
     ----- Loaded Modules -----

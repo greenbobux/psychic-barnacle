@@ -10,6 +10,7 @@
     "undefined-global",
     "missing-module-return",
     "unused-vararg",
-    "empty-block"
+    "empty-block",
+    "unused-local"
   ]
 }
