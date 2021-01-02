@@ -1,4 +1,5 @@
 return function ()
+    local ReplicaService = require(game.ServerScriptService.ReplicaService)
     local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")
     local ProfileService = game.ReplicatedStorage.Source.Server.Modules.ProfileService
     function fill_table(literits)
@@ -6,16 +7,44 @@ return function ()
         local str = [[.]]
         return str:rep(literits-1):split([[.]])
     end
-
+    local table7 = fill_table(7)
+    local table21 = fill_table(20)
+    print(table7,table21)
     local ProfileTemplate = {
         Burritos = 10;
 		Inventory = {
-			Hotbar = {
-             fill_table(7)
-			};
+			Hotbar =  {
+                 "";
+                 "";
+                 "";
+                 "";
+                 "";
+                 "";
+                 "";
+                };
 			Inventory = {
-                fill_table(21)
-            };
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               "";
+               };
 		};
     }
 
@@ -33,12 +62,72 @@ return function ()
     )
 
     local Profiles = {} -- [player] = profile
+    --[[
+        {
+        Burritos = 10;
+		Inventory = {
+			Hotbar = {
+            fill_table(7)
+			};
+			Inventory = {
+                fill_table(21)
+            };
+		};
+    }
 
-    ----- Private Functions -----
-local function LoadedProfile(profile,player)
+    ]]
+
+    function TableToData(table,player)
+    local HttpService = game:GetService("HttpService")
+    local function Encode(data)
+        return HttpService:JSONEncode(data)
+    end
     
-end
-local kickmsg = "This means you've logged in on two accounts."
+    local folder = Instance.new("Folder")
+    local function RecursiveSearch(aTable,Parent)
+        for key, value in pairs(aTable) do --unordered search
+            if(type(value) == "table") then
+                local folder2 = Instance.new("Folder")
+                folder2.Name = key
+                folder2.Parent = Parent
+                RecursiveSearch(value,folder2)
+            else
+                local bools = {StringValue=nil,NumberValue=nil,BoolValue=nil}
+                local v_t = type(value)
+                bools.StringValue = v_t == "string" or v_t == "table"
+                bools.NumberValue = v_t == "number"
+                bools.BoolValue = v_t == "boolean"
+                for i,v in pairs(bools) do
+
+                    if v then
+                        local valuee = Instance.new(i)
+                        valuee.Parent = Parent
+                        valuee.Name = key
+                        valuee.Value = value
+                        valuee:GetPropertyChangedSignal("Value"):Connect(function()
+                            local NewValue = valuee.Value
+                            aTable[key] = NewValue
+                        end)
+                    end
+                end
+
+            end
+        end
+    end
+    
+    local tbl_ = {}
+    tbl_ = table.Data
+    RecursiveSearch(tbl_,folder)
+
+    return tbl_,folder
+    end
+    ----- Private Functions -----
+    local function LoadedProfile(profile,player)
+        local tbl_experimental,folder = TableToData(profile,player)
+        folder.Parent = player
+        folder.Name = "Data"
+    end
+    local kickmsg = "This means you've logged in on two accounts."
     local function PlayerAdded(player)
         local profile = GameProfileStore:LoadProfileAsync(
             "Player_" .. player.UserId,
@@ -78,6 +167,10 @@ local kickmsg = "This means you've logged in on two accounts."
 
     Players.PlayerRemoving:Connect(function(player)
         local profile = Profiles[player]
+        local folder = game.ServerStorage.ProfileHandler__.profiles:FindFirstChild(player)
+        if folder then
+            folder:Destroy()
+        end
         if profile ~= nil then
             profile:Release()
         end
