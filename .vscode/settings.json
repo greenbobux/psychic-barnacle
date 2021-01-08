@@ -11,6 +11,10 @@
     "missing-module-return",
     "unused-vararg",
     "empty-block",
-    "unused-local"
+    "unused-local",
+    "unused-function"
+  ],
+  "Lua.diagnostics.ignore": [
+    "Connect"
   ]
 }
