@@ -2,6 +2,7 @@ return function ()
     local ReplicaService = require(game.ServerScriptService.ReplicaService)
     local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")
     local ProfileService = game.ReplicatedStorage.Source.Server.Modules.ProfileService
+    local HttpService = game:GetService("HttpService")
     function fill_table(literits)
         assert(type(literits)=="number", "Argument #1 NaN")
         local str = [[.]]
@@ -117,7 +118,28 @@ return function ()
     
     local tbl_ = {}
     tbl_ = table.Data
-    RecursiveSearch(tbl_,folder)
+    for i,v in pairs(tbl_) do
+       
+        local v_t = type(v)
+
+        local parse = ""
+        if v_t == "string" or v_t == "table" then
+            parse = "String"
+        elseif v_t == "number" then
+            parse = "Number"
+        elseif v_t == "boolean" then
+            parse = "Bool"
+        end
+        parse = Instance.new(parse.."Value")
+        parse.Parent = folder
+        parse.Name = i
+        parse.Value = type(v) == "table" and HttpService:JSONEncode(v) or v
+        parse:GetPropertyChangedSignal("Value"):Connect(function()
+            local NewValue = parse.Value
+            print("New Value".. NewValue)
+            table[i] = NewValue
+        end)
+    end
 
     return tbl_,folder
     end

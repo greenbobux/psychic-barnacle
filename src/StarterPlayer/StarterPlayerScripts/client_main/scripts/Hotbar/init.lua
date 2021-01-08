@@ -11,22 +11,27 @@ return function ()
         local ViewportHandler = require(ReplicatedStorage.Viewport)
         local Module3D = require(game.ReplicatedStorage:WaitForChild("Module3D"))
         local slots = {}
+        local Data = require( ReplicatedStorage.StringHandler).new( Players.LocalPlayer.Data.Inventory )
         function RenderHotbar()
             for i,Slot in pairs(pgui.Hotbar_Inventory.Hotbar:GetChildren()) do
                 coroutine.wrap(function()
                     
                     if Slot:IsA("Frame") then
-                        --Slot.inner.ViewportFrame:Destroy()
-                        print(Slot.Name)
+                      
                         
                                 print 'hello!'
-                                local ViewportFrame = Instance.new("ViewportFrame")
+                                local ViewportFrame = Slot.Inner:FindFirstChild("ViewportFrame") or Instance.new("ViewportFrame")
                                 ViewportFrame.BackgroundTransparency = 1
                                 ViewportFrame.Parent = Slot.inner
                                 wait()
                                 local offset = CFrame.new(0,9,0)
                                 --ReplicatedStorage.Items.Misc.Book.Model:Clone()
-                                local ItemMain = ItemHandler:GetItemFromName("Book"):Clone()
+                                local ItemName = Data.Hotbar["1"]:FindFirstChild(Slot.Name)
+                                print(ItemName.Value)
+                                if not ItemName then return end
+                                local RequestedItem = ItemHandler:GetItemFromName(ItemName.Value)
+                                if RequestedItem == "none" then return end
+                                local ItemMain = RequestedItem:Clone()
                                 local Item = ItemMain.Model
                                 local orientation, size = Item:GetBoundingBox()
                                 Item.Parent = ViewportFrame

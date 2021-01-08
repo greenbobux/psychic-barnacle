@@ -13,6 +13,7 @@ end
 tbl.data = {ITEM_COUNT = 0}
 tbl.ItemDirectory = ReplicatedStorage.Items
 function tbl.GetItemFromName(self,name)
+    if name == "none" then return end
     for i,v in pairs(self.ItemDirectory:GetDescendants()) do
         local item_data = v.Name == "ItemData" and Decode(v.Value)
         if not item_data then continue end

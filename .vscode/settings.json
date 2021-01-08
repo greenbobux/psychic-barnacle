@@ -15,6 +15,7 @@
     "unused-function"
   ],
   "Lua.diagnostics.ignore": [
-    "Connect"
+    "Connect",
+    "Value"
   ]
 }
