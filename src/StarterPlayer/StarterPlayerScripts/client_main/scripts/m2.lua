@@ -9,6 +9,7 @@ print "apples"
 local isClientInZone = zone:getPlayer(localPlayer) -- Checks whether the local player is within the zone
 
 zone.playerAdded:Connect(function() -- Fires when the localPlayer enters the zone
+	print "aples"
 	local Module = require(game.ReplicatedStorage.Modules.UI).new()
 	local FadeTime = 1
     localPlayer.Character.HumanoidRootPart.Anchored = true

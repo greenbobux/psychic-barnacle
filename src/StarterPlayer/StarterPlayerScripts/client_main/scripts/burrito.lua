@@ -1,20 +1,23 @@
 return function ()
     local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")
     local Roact = require(ReplicatedStorage.Roact)
+    local Format = require(ReplicatedStorage.FormatNumber)
+    local data = require(script.Parent.Parent.data_handler)
     local burrito = Roact.Component:extend("Burrito")
     function burrito:init()
         coroutine.wrap(function()
             self:setState({
-                Burritos = Players.LocalPlayer.Data.Burritos.Value
+                Burritos = data.Cache
             })
         end)()
        
     end
     function burrito:didMount()
         coroutine.wrap(function()
+            print "did mount"
             Players.LocalPlayer.Data.Burritos:GetPropertyChangedSignal("Value"):Connect(function()
                 self:setState({
-                    Burritos = Players.LocalPlayer.Data.Burritos.Value
+                    Burritos = Format.FormatCompact( data.Cache )
                 })
             end)
         end)()
@@ -30,7 +33,7 @@ return function ()
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
             Position = UDim2.new(0.907249153, 0, 0.91719538, 0),
-            Size = UDim2.new(0.115499727, 0, 0.0796964094, 0),
+            Size = UDim2.new(.2,0, .2,0), --0.115499727, 0, 0.0796964094, 0
         }, {
             Frame = Roact.createElement("Frame", {
                 Name = "Burrito",
@@ -40,7 +43,7 @@ return function ()
                 BorderSizePixel = 0,
                 Position = UDim2.new(0.485595107, 0, 0.487754226, 0),
                 Rotation = 20,
-                Size = UDim2.new(0.309597522, 0, 0.819672167, 0),
+                Size = UDim2.new(0.309597522, 0, 0.819672167, 0), --0.309597522, 0, 0.819672167, 0
             }, {
                 Burrito = Roact.createElement("ImageLabel", {
                     AnchorPoint = Vector2.new(0.5, 0.5),

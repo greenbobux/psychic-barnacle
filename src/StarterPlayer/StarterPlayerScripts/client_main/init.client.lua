@@ -31,9 +31,19 @@ LocalPlayer.CharacterAdded:Connect(function()
 	run(char_added)
 end)
 local Character = LocalPlayer.CharacterAdded:Wait() or LocalPlayer.CharacterAdded
+local function blank()
+	
+end
+local fenv = {
+	ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService");
+	
+}
 local Funcs = {
 	ms = function(ms_instance)
-		local S,E = pcall(require(ms_instance))
+		local func = require(ms_instance)
+		--setfenv(func,fenv)
+		local S,E = pcall(func)
+		
 		return S and S, E and E
 	end
 }

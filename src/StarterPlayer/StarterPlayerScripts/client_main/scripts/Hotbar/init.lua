@@ -9,27 +9,25 @@ return function ()
         local pgui = Player.PlayerGui
         local hotbar_viewport
         local ViewportHandler = require(ReplicatedStorage.Viewport)
-        local Module3D = require(game.ReplicatedStorage:WaitForChild("Module3D"))
+
         local slots = {}
-        local Data = require( ReplicatedStorage.StringHandler).new( Players.LocalPlayer.Data.Inventory )
+       
         function RenderHotbar()
+            print "hi"
             for i,Slot in pairs(pgui.Hotbar_Inventory.Hotbar:GetChildren()) do
                 coroutine.wrap(function()
                     
                     if Slot:IsA("Frame") then
-                      
-                        
-                                print 'hello!'
-                                local ViewportFrame = Slot.Inner:FindFirstChild("ViewportFrame") or Instance.new("ViewportFrame")
+                                local ViewportFrame = Slot.inner:FindFirstChild("ViewportFrame") or Instance.new("ViewportFrame")
                                 ViewportFrame.BackgroundTransparency = 1
                                 ViewportFrame.Parent = Slot.inner
                                 wait()
                                 local offset = CFrame.new(0,9,0)
                                 --ReplicatedStorage.Items.Misc.Book.Model:Clone()
-                                local ItemName = Data.Hotbar["1"]:FindFirstChild(Slot.Name)
-                                print(ItemName.Value)
+                                local ItemName = "Book"
+                                print(ItemName)
                                 if not ItemName then return end
-                                local RequestedItem = ItemHandler:GetItemFromName(ItemName.Value)
+                                local RequestedItem = ItemHandler:GetItemFromName(ItemName)
                                 if RequestedItem == "none" then return end
                                 local ItemMain = RequestedItem:Clone()
                                 local Item = ItemMain.Model
@@ -72,17 +70,9 @@ return function ()
         end
 
     local total_seconds = 0
-    wait(1)
-    RenderHotbar()
+   while  true do
+       wait()
+       RenderHotbar()
+   end
 
-   
-    --[[
-    RunService.Heartbeat:Connect(function(delta)
-        total_seconds += delta
-        if total_seconds >= .1 then
-            render()
-            total_seconds = 0
-        end
-    end)
-    ]]
 end
