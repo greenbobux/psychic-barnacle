@@ -1,6 +1,5 @@
 return function()
 	wait()
-	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 	local camera = game.Workspace.CurrentCamera;
 	local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid");
 	local UserInput = game:GetService("UserInputService")
@@ -8,7 +7,6 @@ return function()
 	viewModel.Parent = workspace
 	print(viewModel.Parent.Name)
 	local AnimationPlayer = require(script.AnimationPlayer).new(humanoid)
-	
 	local AnimationViewmodel = require(script.AnimationPlayer).new(workspace:WaitForChild("viewModel").AnimationController)
 	wait(.1)
 
@@ -24,7 +22,7 @@ return function()
 		-- get shoulder we are rotating
 		local shoulder = viewModel["Torso"][key.." Shoulder"]
 		-- calculate worldspace arm cframe from Right or Left part in the weapon model
-		local cf = shoulder.C1 * CFrame.Angles(0, 0, 0) * CFrame.new(0, 1.5, 0);
+		local cf = shoulder.C1 * CFrame.Angles(math.pi/2, 0, 0) * CFrame.new(0, 1.5, 0);
 		-- update the C1 value needed to for the arm to be at cf (do this by rearranging the joint equality from before)
 		shoulder.C1 = cf:inverse() * shoulder.Part0.CFrame * shoulder.C0;
 
@@ -44,7 +42,6 @@ return function()
 		con:Disconnect()
 		onDied()
 	end)
-
 	UserInput.InputBegan:Connect(function(input,gamp)
 
 		require(script.InputBegan)(input,gamp,{
@@ -52,10 +49,4 @@ return function()
 			viewModelAnimator = AnimationViewmodel;
 		})
 	end)
-	for i,v in pairs(ReplicatedStorage.Animations:GetChildren()) do
-		AnimationViewmodel.LoadAnimation(v,false)
-	end
-	game.ReplicatedStorage.Bindables.PlayViewportAnimation.OnInvoke = function(animation)
-		AnimationViewmodel.LoadAnimation(animation,true)
-	end
 end
