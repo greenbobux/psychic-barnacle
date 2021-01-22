@@ -21,7 +21,7 @@ for i,v in pairs(script.scripts.CharacterAdded:GetChildren()) do
 end
 function  run(table)
 	for i,v in pairs(table) do
-		v()
+		coroutine.wrap(v)()
 	end
 end
 local LocalPlayer = game.Players.LocalPlayer
@@ -38,22 +38,40 @@ local fenv = {
 	ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService");
 	
 }
+for i,v in pairs(getfenv(0)) do
+	fenv[i] = v
+end
 local Funcs = {
 	ms = function(ms_instance)
 		local func = require(ms_instance)
-		--setfenv(func,fenv)
-		local S,E = pcall(func)
+		
+		local S,E = pcall(function()
+			coroutine.wrap(function()
+				func()
+			end)()
+		end)
 		
 		return S and S, E and E
 	end
 }
 
-for i,v in pairs(script.scripts:GetChildren()) do
-	if v:IsA("ModuleScript") then
-		local success, error = Funcs.ms(v)
-		--warn(success and success, error and error)
+function Loop_Modules(parent)
+	for i,v in pairs(parent and parent:GetChildren() or script.scripts:GetChildren()) do
+		if v:IsA("ModuleScript") then
+			local success, error = Funcs.ms(v)
+			--warn(success and success, error and error)
+			elseif v:IsA("Folder") and v.Name ~="CharacterAdded" then
+				local MODULE_MAIN = v:FindFirstChild("main_init")
+				if MODULE_MAIN then MODULE_MAIN = require(MODULE_MAIN) else Loop_Modules(v)  end
+				if MODULE_MAIN then 
+					coroutine.wrap(MODULE_MAIN)()
+				end
+		end
 	end
 end
+
+Loop_Modules()
+
 
 
 

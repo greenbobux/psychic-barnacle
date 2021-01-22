@@ -31,6 +31,7 @@ return function ()
 
         local ProfileTemplate = {
             Burritos = 10;
+            [45] = "hi";
             Inventory = {
                 Hotbar =  {
                     "";
@@ -70,13 +71,13 @@ return function ()
     ----- Loaded Modules -----
 
     local ProfileService = require(game.ServerScriptService.ProfileService)
-
+    local HttpService = game:GetService("HttpService")
     ----- Private Variables -----
 
     local Players = game:GetService("Players")
 
     local GameProfileStore = ProfileService.GetProfileStore(
-        "game-save-2",
+        "game-save-4",
         ProfileTemplate
     )
 
@@ -96,74 +97,10 @@ return function ()
 
     ]]
 
-    local function TableToData(table,player)
-        local HttpService = game:GetService("HttpService")
-        local function Encode(data)
-            return HttpService:JSONEncode(data)
-        end
-        
-        local folder = Instance.new("Folder")
-        local function RecursiveSearch(aTable,Parent)
-            for key, value in pairs(aTable) do --unordered search
-                if(type(value) == "table") then
-                    local folder2 = Instance.new("Folder")
-                    folder2.Name = key
-                    folder2.Parent = Parent
-                    RecursiveSearch(value,folder2)
-                else
-                    local bools = {StringValue=nil,NumberValue=nil,BoolValue=nil}
-                    local v_t = type(value)
-                    bools.StringValue = v_t == "string" or v_t == "table"
-                    bools.NumberValue = v_t == "number"
-                    bools.BoolValue = v_t == "boolean"
-                    for i,v in pairs(bools) do
-
-                        if v then
-                            local valuee = Instance.new(i)
-                            valuee.Parent = Parent
-                            valuee.Name = key
-                            valuee.Value = value
-                            valuee:GetPropertyChangedSignal("Value"):Connect(function()
-                                local NewValue = valuee.Value
-                                aTable[key] = NewValue
-                            end)
-                        end
-                    end
-
-                end
-            end
-        end
-        
-        local tbl_ = {}
-        tbl_ = table.Data
-        for i,v in pairs(tbl_) do
-        
-            local v_t = type(v)
-
-            local parse = ""
-            if v_t == "string" or v_t == "table" then
-                parse = "String"
-            elseif v_t == "number" then
-                parse = "Number"
-            elseif v_t == "boolean" then
-                parse = "Bool"
-            end
-            parse = Instance.new(parse.."Value")
-            parse.Parent = folder
-            parse.Name = i
-            parse.Value = type(v) == "table" and HttpService:JSONEncode(v) or v
-            parse:GetPropertyChangedSignal("Value"):Connect(function()
-                local NewValue = parse.Value
-                print("New Value".. NewValue)
-                table[i] = NewValue
-            end)
-        end
-
-        return tbl_,folder
-        end
         ----- Private Functions -----
     
         local kickmsg = "This means you've logged in on two accounts."
+
     local function PlayerAdded(player)
         local profile = GameProfileStore:LoadProfileAsync(
             "Player_" .. player.UserId,
@@ -177,13 +114,21 @@ return function ()
                 player:Kick(kickmsg)
             end)
             if player:IsDescendantOf(Players) == true then
-
+                
 
 
 
                 Profiles[player] = profile
-            
-            
+                print(profile.Data)
+                
+                game.ReplicatedStorage.Remotes.DataReplicator:FireClient(player,profile.Data)
+                setmetatable(profile.Data,{__newindex = function(tbl,k,v)
+                    tbl[k] = v 
+
+                end})
+                
+                
+
             else
                 -- Player left before the profile loaded:
                 profile:Release()
@@ -203,7 +148,9 @@ return function ()
     end
 
     ----- Connections -----
-
+    local function Wait()
+        return RunService.Heartbeat:Wait()
+    end
         Players.PlayerAdded:Connect(PlayerAdded)
 
         Players.PlayerRemoving:Connect(function(player)
@@ -213,23 +160,63 @@ return function ()
             end
         end)
        
+        function ReplicateUpdate(player,data)
+            game.ReplicatedStorage.Remotes.DataReplicator:FireClient(player,data)
+        end
         
         ReplicatedStorage.Bindables.GetData.OnInvoke = function(player)
-            return Profiles[player]
+            return Profiles[player].Data
         end
         ReplicatedStorage.Bindables.SetData.OnInvoke = function(player,data)
             Profiles[player].Data = data
-            ReplicatedStorage.Remotes.DataReplicator:FireClient(player,data)
-        end
+            ReplicateUpdate(player,Profiles[player].Data)
+        end 
         ReplicatedStorage.Bindables.UpdateData.OnInvoke = function(player,directory,data)
+            
             local profile = Profiles[player]
-            local current = profile.Data
+            
+                local current = profile.Data
+            
+                local key
+            local number_index = 0
+            local string_index
+            print(directory.." <- directory ezezez")
+            directory = string.split(directory,".")
             for i,v in pairs(directory) do
-                if i == #directory then continue end
-                current = current[v]
+                local check = type(tonumber(v)) ~= nil and tonumber(v) or v
+                if not current[check] then continue end
+                if i ~= # directory then
+                    
+                    current = current[v]
+                else
+
+                    
+                    print(check)
+                    
+                    string_index = check
+                end
             end
-            current[#directory] = data
+            current[string_index] = data
+            local DATA = {}
+                for i,v in pairs(profile.Data) do
+                    DATA[i] = v
+                end
+            game.ReplicatedStorage.Remotes.DataReplicator:FireClient(player,DATA)
+            
         end
+        local data_request = {}
+        ReplicatedStorage.Remotes.irllywantbobuxforchristmas.OnServerInvoke = function(player)
+                local Profile
+                player = game.Players:FindFirstChild(player.Name)
+                repeat
+                    Wait()
+                until Profiles[player]
+                
+                Profile = Profiles[player]
+                
+            return Profile.Data
+        end
+        
 end
 
     
