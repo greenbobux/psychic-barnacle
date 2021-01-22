@@ -2,12 +2,16 @@ return function ()
     local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")
     local Roact = require(ReplicatedStorage.Roact)
     local Format = require(ReplicatedStorage.FormatNumber)
-    local data = require(script.Parent.Parent.data_handler)
+    local data = require(ReplicatedStorage.DataHandleModule)
+    local DataUpdate = data.new()
     local burrito = Roact.Component:extend("Burrito")
+    repeat
+         wait()
+    until data.Client.Cache ~= nil
     function burrito:init()
         coroutine.wrap(function()
             self:setState({
-                Burritos = data.Cache
+                Burritos = Format.FormatCompact( data.Client.Cache.Burritos )
             })
         end)()
        
@@ -15,9 +19,10 @@ return function ()
     function burrito:didMount()
         coroutine.wrap(function()
             print "did mount"
-            Players.LocalPlayer.Data.Burritos:GetPropertyChangedSignal("Value"):Connect(function()
+            DataUpdate.DataChanged:Connect(function(DATA)
+                print("UPDATE",DATA)
                 self:setState({
-                    Burritos = Format.FormatCompact( data.Cache )
+                    Burritos = Format.FormatCompact( data.Client.Cache.Burritos )
                 })
             end)
         end)()
