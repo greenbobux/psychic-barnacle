@@ -17,12 +17,7 @@ end
 
 for _,Script in pairs(ServerScripts:GetChildren()) do
     if Script:IsA("ModuleScript") then
-        local s,e = pcall(function()
-			require(Script)()
-		end)
-		if e then
-			warn(s)
-		end
+        require(Script)()
     end
 end
 
