@@ -4,14 +4,14 @@ return function()
 	local camera = game.Workspace.CurrentCamera;
 	local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid");
 	local UserInput = game:GetService("UserInputService")
-	local viewModel = game.ReplicatedStorage:WaitForChild("viewModel"):Clone();
+	local viewModel = game.ReplicatedStorage:WaitForChild("viewModel"):Clone()
 	viewModel.Parent = workspace
-	print(viewModel.Parent.Name)
-	local AnimationPlayer = require(script.AnimationPlayer).new(humanoid)
-	
-	local AnimationViewmodel = require(script.AnimationPlayer).new(workspace:WaitForChild("viewModel").AnimationController)
+	local AnimationController = viewModel.AnimationController
 	wait(.1)
 
+	local Animations = {
+		viewModel = {};
+	}
 
 
 	viewModel["Right Arm"].BrickColor = humanoid.Parent["Right Arm"].BrickColor
@@ -33,7 +33,7 @@ return function()
 
 
 	local function onUpdate(dt)
-		viewModel.HumanoidRootPart.CFrame = camera.CFrame*CFrame.new(0,-1,0);
+		viewModel.HumanoidRootPart.CFrame = camera.CFrame*CFrame.new(0,-.6,-.55) * CFrame.Angles(math.rad(-1.875),0,0);
 		--remoteEvents.tiltAt:FireServer(math.asin(camera.CFrame.LookVector.y));
 		-- update every frame so the arms stay in place when the player aims down sights
 		--updateArm("Right");
@@ -46,16 +46,25 @@ return function()
 	end)
 
 	UserInput.InputBegan:Connect(function(input,gamp)
-
 		require(script.InputBegan)(input,gamp,{
 			PlayerAnimator = AnimationPlayer;
 			viewModelAnimator = AnimationViewmodel;
 		})
 	end)
+
 	for i,v in pairs(ReplicatedStorage.Animations:GetChildren()) do
-		AnimationViewmodel.LoadAnimation(v,false)
+		local animation_type = "character"
+		if v:FindFirstChild("type") then
+			animation_type = v.type.Value
+		end
+		if animation_type == "viewModel" then
+
+		end
+		if not Animations[animation_type] then Animations[animation_type] = {} end
+
+		Animations[animation_type][v.Name] = AnimationController:LoadAnimation(v)
 	end
 	game.ReplicatedStorage.Bindables.PlayViewportAnimation.OnInvoke = function(animation)
-		AnimationViewmodel.LoadAnimation(animation,true)
+		Animations.viewModel[animation.Name]:Play()
 	end
 end

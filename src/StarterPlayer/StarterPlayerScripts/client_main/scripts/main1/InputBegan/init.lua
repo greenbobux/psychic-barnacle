@@ -23,6 +23,7 @@ return function()
     local Keybinds = {}
     local function HandleAction(Action,UserInputState,InputObject)
         local Event = Events[Action]
+        if UserInputState == Enum.UserInputState.Begin then return end
         if Event then Event(require(ReplicatedStorage.input)(InputObject)) end
     end
     for _,m in pairs(script.Events:GetChildren()) do
