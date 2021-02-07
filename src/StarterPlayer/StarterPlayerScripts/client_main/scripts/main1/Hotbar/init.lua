@@ -1,6 +1,18 @@
 
 return coroutine.wrap ( function ()
-    print("hotbar")
+    game.ReplicatedStorage.Remotes.Items.Binds.Unequipped.OnInvoke = function(client)
+        local settings = client.Settings
+        if settings.ToggleMouseLock then
+            PlayerGui.ui.lock.Modal = false
+        end
+    end
+
+    game.ReplicatedStorage.Remotes.Items.Binds.Equipped.OnInvoke = function(client)
+        local settings = client.Settings
+        if settings.ToggleMouseLock then
+            PlayerGui.ui.lock.Modal = true
+        end
+    end
         local data = require(game.ReplicatedStorage.DataHandleModule)
         local connection = data.new()
         local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")

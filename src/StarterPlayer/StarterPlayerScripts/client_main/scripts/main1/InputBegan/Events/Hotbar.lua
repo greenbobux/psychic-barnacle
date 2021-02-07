@@ -44,7 +44,7 @@ return function(Input)
                 client = require(client)
                 if client.Main.Unequipped then
                     coroutine.wrap(client.Main.Unequipped)()
-                    ReplicatedStorage.Remotes.Items.Binds.Unequipped:Invoke(client)
+                    --ReplicatedStorage.Remotes.Items.Binds.Unequipped:Invoke(client)
                 end
             end
         end
@@ -72,7 +72,7 @@ return function(Input)
                     if client.Main.Equipped then
                         print("equipped")
                         coroutine.wrap(client.Main.Equipped)()
-                        ReplicatedStorage.Remotes.Items.Binds.Equipped:Invoke(client)
+                        --ReplicatedStorage.Remotes.Items.Binds.Equipped:Invoke(client)
                     end
                 end
             end
@@ -94,18 +94,6 @@ return function(Input)
         
     end
 
-    ReplicatedStorage.Remotes.Items.Binds.Unequipped.OnInvoke = function(client)
-        local settings = client.Settings
-        if settings.ToggleMouseLock then
-            PlayerGui.ui.lock.Modal = false
-        end
-    end
-
-    ReplicatedStorage.Remotes.Items.Binds.Equipped.OnInvoke = function(client)
-        local settings = client.Settings
-        if settings.ToggleMouseLock then
-            PlayerGui.ui.lock.Modal = true
-        end
-    end
+   
 end
 
