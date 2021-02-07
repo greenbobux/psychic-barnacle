@@ -29,17 +29,55 @@ return function(Input)
         end
     end
     if index then
-        print(index)
+        
     end
     local ItemName = DataHandler.Client.Cache.Inventory.Hotbar[index]
-    if index == Character.Values.Slot.Value then if PreviousAnim then PreviousAnim:Stop() end Animator:EndAnimation("Itemhold") workspace.viewModel.ItemModel:Destroy() Character.Values.Slot.Value = 0 return end
+    if index == Character.Values.Slot.Value then 
+            if PreviousAnim then 
+                PreviousAnim:Stop() 
+            end 
+        Animator:EndAnimation("Itemhold") 
+        local item = require(game:GetService("ReplicatedStorage").item_handler):GetItemFromName(ItemName)
+        if item:FindFirstChild("events") then
+            local client = item.events:FindFirstChild("client")
+            if client then
+                client = require(client)
+                if client.Main.Unequipped then
+                    coroutine.wrap(client.Main.Unequipped)()
+                    ReplicatedStorage.Remotes.Items.Binds.Unequipped:Invoke(client)
+                end
+            end
+        end
+        workspace.viewModel.ItemModel:Destroy() 
+        Character.Values.Slot.Value = 0; 
+        Character.Values.Slot.ItemName.Value = "" 
+        return 
+    end
 
     if ItemName then
-        
         Character.Values.Slot.Value = index
+        Character.Values.Slot.ItemName.Value = ItemName
         local Item = ItemHandler:GetItemFromName(ItemName)
         if workspace:FindFirstChild("viewModel"):FindFirstChild("ItemModel") then workspace.viewModel.ItemModel:Destroy() end
         if not Item then return end
+
+        local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local ItemNameValue = Character.Values.Slot.ItemName.Value
+        if ItemNameValue ~= "" or nil then
+            local item = require(game:GetService("ReplicatedStorage").item_handler):GetItemFromName(ItemNameValue)
+            if item:FindFirstChild("events") then
+                local client = item.events:FindFirstChild("client")
+                if client then
+                    client = require(client)
+                    if client.Main.Equipped then
+                        print("equipped")
+                        coroutine.wrap(client.Main.Equipped)()
+                        ReplicatedStorage.Remotes.Items.Binds.Equipped:Invoke(client)
+                    end
+                end
+            end
+        end
+
         local ItemClone = Item:Clone()
         local ItemModel = ItemClone.Model
         for i,v in pairs(ItemModel:GetDescendants()) do
@@ -56,6 +94,18 @@ return function(Input)
         
     end
 
+    ReplicatedStorage.Remotes.Items.Binds.Unequipped.OnInvoke = function(client)
+        local settings = client.Settings
+        if settings.ToggleMouseLock then
+            PlayerGui.ui.lock.Modal = false
+        end
+    end
 
+    ReplicatedStorage.Remotes.Items.Binds.Equipped.OnInvoke = function(client)
+        local settings = client.Settings
+        if settings.ToggleMouseLock then
+            PlayerGui.ui.lock.Modal = true
+        end
+    end
 end
 

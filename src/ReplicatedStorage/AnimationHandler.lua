@@ -17,6 +17,13 @@ function AnimationHandler:new(animator: userdata, optional_data: table)
         end
 
     end
+   function Animator:EndAllAnimations ()
+        for i,v in pairs(self.PlayingAnimations) do
+            v:Stop()
+        end
+   end 
+
+
     function Animator:EndAnimation(AnimationName)
         local var = self.PlayingAnimations[AnimationName]
         if var then
