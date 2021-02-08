@@ -1,6 +1,5 @@
 
 return coroutine.wrap ( function ()
-<<<<<<< HEAD
     game.ReplicatedStorage.Remotes.Items.Binds.Unequipped.OnInvoke = function(client)
         
     end
@@ -8,9 +7,7 @@ return coroutine.wrap ( function ()
     game.ReplicatedStorage.Remotes.Items.Binds.Equipped.OnInvoke = function(client)
         
     end
-=======
     print("hotbar")
->>>>>>> parent of 11d7e3d... fixed sum crap
         local data = require(game.ReplicatedStorage.DataHandleModule)
         local connection = data.new()
         local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")
@@ -22,13 +19,6 @@ return coroutine.wrap ( function ()
         local hotbar_viewport
         local ViewportHandler = require(ReplicatedStorage.Viewport)
 
-        local slots = {}
-        
-        for i,Slot in pairs(pgui.Hotbar_Inventory.Hotbar:GetChildren()) do
-            if Slot:IsA("Frame") then
-
-            end
-        end
 
         
 
@@ -88,7 +78,6 @@ return coroutine.wrap ( function ()
 
         local total_seconds = 0
     game.Players.LocalPlayer.CharacterAdded:Connect(function()
-        wait(.5)
         RenderHotbar()
     end)
             connection.DataChanged:Connect(function()

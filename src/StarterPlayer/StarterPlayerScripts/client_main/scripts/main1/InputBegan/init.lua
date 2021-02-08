@@ -1,4 +1,5 @@
 return function()
+    print "a"
     local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")
     local Player = {
     } 
@@ -22,18 +23,14 @@ return function()
     local Events = {}
     local Keybinds = {}
     local function HandleAction(Action,UserInputState,InputObject)
+        
         local Event = Events[Action]
         if UserInputState == Enum.UserInputState.Begin then return end
         if Event then Event(require(ReplicatedStorage.input)(InputObject)) end
     end
     for _,m in pairs(script.Events:GetChildren()) do
-        m = require(m)
-        if typeof(m) == "table" then
-            Events[m.Name] = m[2] 
-            m[1].OnInvoke = m[2]
-        elseif typeof(m) == "function" then
-            Events[m.Name] = m
-        end 
+        local req_m = require(m)
+        Events[m.Name] = req_m
     end
     for _,m in pairs(script.Keybinds:GetChildren()) do
         Keybinds[m.Name] = require(m)
