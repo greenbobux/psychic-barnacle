@@ -1,17 +1,11 @@
 
 return coroutine.wrap ( function ()
     game.ReplicatedStorage.Remotes.Items.Binds.Unequipped.OnInvoke = function(client)
-        local settings = client.Settings
-        if settings.ToggleMouseLock then
-            PlayerGui.ui.lock.Modal = false
-        end
+        
     end
 
     game.ReplicatedStorage.Remotes.Items.Binds.Equipped.OnInvoke = function(client)
-        local settings = client.Settings
-        if settings.ToggleMouseLock then
-            PlayerGui.ui.lock.Modal = true
-        end
+        
     end
         local data = require(game.ReplicatedStorage.DataHandleModule)
         local connection = data.new()
@@ -25,7 +19,15 @@ return coroutine.wrap ( function ()
         local ViewportHandler = require(ReplicatedStorage.Viewport)
 
         local slots = {}
-       
+        
+        for i,Slot in pairs(pgui.Hotbar_Inventory.Hotbar:GetChildren()) do
+            if Slot:IsA("Frame") then
+
+            end
+        end
+
+        
+
         function RenderHotbar()
           
             for i,Slot in pairs(pgui.Hotbar_Inventory.Hotbar:GetChildren()) do
@@ -81,7 +83,10 @@ return coroutine.wrap ( function ()
         end
 
         local total_seconds = 0
-    
+    game.Players.LocalPlayer.CharacterAdded:Connect(function()
+        wait(.5)
+        RenderHotbar()
+    end)
             connection.DataChanged:Connect(function()
                 RenderHotbar()
             end)

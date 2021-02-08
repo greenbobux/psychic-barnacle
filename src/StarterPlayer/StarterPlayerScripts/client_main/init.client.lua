@@ -27,6 +27,7 @@ end
 local LocalPlayer = game.Players.LocalPlayer
 
 LocalPlayer.CharacterAdded:Connect(function()
+	wait()
 	print("char added")
 	run(char_added)
 end)
@@ -58,6 +59,7 @@ local Funcs = {
 function Loop_Modules(parent)
 	for i,v in pairs(parent and parent:GetChildren() or script.scripts:GetChildren()) do
 		if v:IsA("ModuleScript") then
+			if v:FindFirstChild("Disable") then continue end
 			local success, error = Funcs.ms(v)
 			--warn(success and success, error and error)
 			elseif v:IsA("Folder") and v.Name ~="CharacterAdded" then

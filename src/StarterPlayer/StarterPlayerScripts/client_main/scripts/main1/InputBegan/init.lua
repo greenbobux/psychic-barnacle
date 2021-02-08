@@ -27,7 +27,13 @@ return function()
         if Event then Event(require(ReplicatedStorage.input)(InputObject)) end
     end
     for _,m in pairs(script.Events:GetChildren()) do
-        Events[m.Name] = require(m)
+        m = require(m)
+        if typeof(m) == "table" then
+            Events[m.Name] = m[2] 
+            m[1].OnInvoke = m[2]
+        elseif typeof(m) == "function" then
+            Events[m.Name] = m
+        end 
     end
     for _,m in pairs(script.Keybinds:GetChildren()) do
         Keybinds[m.Name] = require(m)
