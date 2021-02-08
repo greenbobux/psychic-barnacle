@@ -1,5 +1,6 @@
 
 return coroutine.wrap ( function ()
+<<<<<<< HEAD
     game.ReplicatedStorage.Remotes.Items.Binds.Unequipped.OnInvoke = function(client)
         
     end
@@ -7,6 +8,9 @@ return coroutine.wrap ( function ()
     game.ReplicatedStorage.Remotes.Items.Binds.Equipped.OnInvoke = function(client)
         
     end
+=======
+    print("hotbar")
+>>>>>>> parent of 11d7e3d... fixed sum crap
         local data = require(game.ReplicatedStorage.DataHandleModule)
         local connection = data.new()
         local ReplicatedStorage,ServerStorage,Players,TweenService,RunService = game:GetService("ReplicatedStorage"),game:GetService("ServerStorage"),game:GetService("Players"),game:GetService("TweenService"),game:GetService("RunService")

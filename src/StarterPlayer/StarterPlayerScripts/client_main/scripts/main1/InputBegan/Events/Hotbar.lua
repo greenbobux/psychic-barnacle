@@ -94,6 +94,18 @@ return function(Input)
         
     end
 
-   
+    ReplicatedStorage.Remotes.Items.Binds.Unequipped.OnInvoke = function(client)
+        local settings = client.Settings
+        if settings.ToggleMouseLock then
+            PlayerGui.ui.lock.Modal = false
+        end
+    end
+
+    ReplicatedStorage.Remotes.Items.Binds.Equipped.OnInvoke = function(client)
+        local settings = client.Settings
+        if settings.ToggleMouseLock then
+            PlayerGui.ui.lock.Modal = true
+        end
+    end
 end
 
